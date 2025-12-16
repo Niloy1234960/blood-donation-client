@@ -14,6 +14,7 @@ import AllUsers from "../Page/Dashboard/AllUsers/AllUsers";
 import PrivateRoute from "./PrivateRoute";
 import Funding from "../Page/Funding/Funding";
 import SearchDonor from "../Page/Search/SearchDonor";
+import DonationDetails from "../Page/DonationDetails/DonationDetails";
 
 
 
@@ -46,6 +47,13 @@ export const router = createBrowserRouter([
         {
             path: "/search",
             Component: SearchDonor
+        },
+        {
+            path: "/donation-details/:id",
+            element: <PrivateRoute>
+                         <DonationDetails>
+                         </DonationDetails>
+                     </PrivateRoute>
         }
     ]
   },

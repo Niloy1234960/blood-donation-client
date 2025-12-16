@@ -1,189 +1,217 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../../Context/AuthContext';
-
-// DUMMY DATA
-const initialUserData = {
-  email: 'niloymondal1370@gmail.com',
-  name: 'Niloy Mondal',
-  bloodGroup: 'A+',
-  district: 'Chandpur',
-  upazila: 'Anwara',
-  // আপনার প্রোফাইল ইমেজের URL এখানে দিন
-//   profileImg: 'https://i.imgur.com/your-profile-image.jpg', 
-};
+import React, {  useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../../Context/AuthContext";
+// import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { updateProfile } from "firebase/auth";
+// import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hook/UseAxiosSecure";
+import Swal from "sweetalert2";
 
 const ProfileInput = () => {
+  const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+  const [dbuser, setDbuser] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
+  const [districts, setDistricts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(initialUserData);
-  const [tempData, setTempData] = useState(initialUserData); // For temporary edits
-  const{user} = useContext(AuthContext)
-  // Handlers
-  const handleEditClick = () => {
-    if (isEditing) {
-      // Save changes 
-      setFormData(tempData);
-    } else {
-      // Start editing
-      setTempData(formData); 
-    }
-    setIsEditing(!isEditing);
-  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTempData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const fetchUser =()=>{
+    axiosSecure.get(`user-profile?email=${user?.email}`).then((res) => {
+      setDbuser(res.data);
+    });
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    axios.get("/upazila.json").then((res) => {
+      setUpazilas(res.data.upazilas);
+    });
+
+    axios.get("/district.json").then((res) => {
+      setDistricts(res.data.districts);
+    });
+  }, []);
+
+  const onSubmit = async(data) => {
+    const { name, district, upazila, blood , photo } = data;
+    const file =photo[0];
+
+    const formData =new FormData()
+    formData.append("image",file)
+
+    const res = await axios.post(
+      `https://api.imgbb.com/1/upload?key=039ed19dd7ea9e86d51e69b5a3528627`,
+      formData
+    );
+
+    const image =res.data.data.display_url
+    const updateData ={
+      name,
+      district,
+      upazila,
+      blood,
+      image
+    }
+
+    axiosSecure.patch("/update-profile",updateData)
+    .then(res=>{
+      updateProfile(user,{
+        displayName:name,photoURL:image,upazila:upazila,district:district,blood:blood
+      })
+      console.log(res);
+       fetchUser()
+       setIsEditing(false)
+        Swal.fire({
+          title: "Your update successfull",
+          icon: "success",
+          draggable: true
+        });
+    })
+    
   };
-  
-  // একটি ডামি অপশন লিস্ট
-  const bloodGroupOptions = ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-'];
 
   return (
-    <div className="flex justify-center min-h-screen bg-gray-50 p-4 sm:p-8">
-      <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 border border-gray-100">
-
-        {/* --- Profile Header --- */}
-        <div className="flex flex-col items-center mb-8">
-          {/* Profile Picture (Avatar) */}
-          <div className="w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-green-500 shadow-lg">
-            <img 
-              src={formData.profileImg} 
-              alt="User Profile" 
-              className="w-full h-full object-cover" 
-              onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150/008000/FFFFFF?text=NM"; }}
-            />
-          </div>
-          
-          <h1 className="text-3xl font-extrabold text-gray-800 mb-4">User Profile</h1>
-
-          {/* Edit Button */}
-          <button
-            onClick={handleEditClick}
-            className={`px-6 py-2 rounded-full font-bold text-white transition-colors duration-200 
-              ${isEditing 
-                ? 'bg-green-600 hover:bg-green-700' 
-                : 'bg-cyan-500 hover:bg-cyan-600'
-              } 
-              shadow-lg hover:shadow-xl transform hover:scale-105`}
-          >
-            {isEditing ? 'Save' : 'Edit'}
-          </button>
-          
-          {isEditing && (
+    <div className=" max-w-5xl mx-auto shadow-xl p-5">
+      <div className="flex justify-center items-center">
+        <div className="flex flex-col gap-5">
+          <img
+            className="w-50 h-50 rounded-full object-cover"
+            src={dbuser?.imageLink}
+            alt=""
+          />
+          {isEditing ? (
+            " "
+          ) : (
             <button
-              onClick={() => {
-                setIsEditing(false);
-                setTempData(formData); // Discard changes
-              }}
-              className="mt-2 text-sm text-gray-500 hover:text-gray-700"
+              onClick={() => setIsEditing(true)}
+              className="btn bg-lime-500"
             >
-              Cancel
+              Edit
             </button>
           )}
-
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          
-          {/* 1. Email Field (Editable) */}
-          <div className="w-full">
-            <label className="text-sm font-semibold text-gray-700 block mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={isEditing ? tempData.email : formData.email}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-2.5 text-base border-2 rounded-md focus:outline-none transition duration-150 ease-in-out
-                ${!isEditing 
-                  ? 'bg-gray-100 border-gray-300 cursor-not-allowed text-gray-800' 
-                  : 'bg-white border-gray-200 focus:border-cyan-500 hover:border-gray-400'
-                } 
-              `}
-            />
-          </div>
-
-          {/* 2. Name Field (Editable) */}
-          <div className="w-full">
-            <label className="text-sm font-semibold text-gray-700 block mb-1">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={isEditing ? tempData.name : formData.name}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-2.5 text-base border-2 rounded-md focus:outline-none transition duration-150 ease-in-out
-                ${!isEditing 
-                  ? 'bg-gray-100 border-gray-300 cursor-not-allowed text-gray-800' 
-                  : 'bg-white border-gray-200 focus:border-cyan-500 hover:border-gray-400'
-                } 
-              `}
-            />
-          </div>
-          
-          {/* 3. Blood Group Field (Disabled/Static) */}
-          <div className="w-full">
-            <label className="text-sm font-semibold text-gray-700 block mb-1">Blood Group*</label>
-            <div className="relative opacity-80">
-              <select
-                name="bloodGroup"
-                value={formData.bloodGroup} 
-                disabled={true} 
-                className="w-full px-4 py-2.5 text-base border-2 rounded-md focus:outline-none bg-gray-100 border-gray-300 cursor-not-allowed text-gray-600 appearance-none"
-              >
-                {/* এই ফিল্ডটি এডিট করা যাবে না, তাই শুধু বর্তমান মানই অপশন হিসেবে দেখাচ্ছে */}
-                {bloodGroupOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-              {/* Custom arrow for disabled select */}
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. District Field (Disabled/Static) */}
-          <div className="w-full">
-            <label className="text-sm font-semibold text-gray-700 block mb-1">District*</label>
-            <div className="relative opacity-80">
-              <select
-                name="district"
-                value={formData.district} 
-                disabled={true} 
-                className="w-full px-4 py-2.5 text-base border-2 rounded-md focus:outline-none bg-gray-100 border-gray-300 cursor-not-allowed text-gray-600 appearance-none"
-              >
-                {/* এই ফিল্ডটি এডিট করা যাবে না */}
-                <option value={formData.district}>{formData.district}</option> 
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </div>
-            </div>
-          </div>
-          
-          {/* 5. Upazila Field (Disabled/Static) */}
-          <div className="w-full">
-            <label className="text-sm font-semibold text-gray-700 block mb-1">Upazila*</label>
-            <div className="relative opacity-80">
-              <select
-                name="upazila"
-                value={formData.upazila} 
-                disabled={true} 
-                className="w-full px-4 py-2.5 text-base border-2 rounded-md focus:outline-none bg-gray-100 border-gray-300 cursor-not-allowed text-gray-600 appearance-none"
-              >
-                {/* এই ফিল্ডটি এডিট করা যাবে না */}
-                <option value={formData.upazila}>{formData.upazila}</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid lg:grid-cols-2 grid-cols-1 mt-10 gap-5"
+      >
+        {/* email field */}
+        <div>
+          <label className="block mb-1 font-medium"> Email</label>
+          <input
+            type="text"
+            readOnly
+            value={dbuser.email}
+            {...register("email")}
+            className="w-full p-2 rounded-lg border"
+          />
+        </div>
+        {/* name field  */}
+        <div>
+          <label className="block mb-1 font-medium"> Name</label>
+          <input
+            type="text"
+            disabled={!isEditing}
+            defaultValue={dbuser.name}
+            className="w-full p-2 rounded-lg border"
+            {...register("name",{required:"please fill name"})}
+          />
+           {errors.name && <p className="text-red-500  mb-1 text-xs ">{errors.name.message}</p>}
+
+        </div>
+        {/* image field  */}
+        <div>
+          <label className="block mb-1 font-medium"> Your Photo</label>
+          <input
+            type="file"
+            className="w-full p-2 rounded-lg border relative z-10"
+            {...register("photo",{required:"please fill photo"})}
+          />
+           {errors.photo && <p className="text-red-500  mb-1 text-xs ">{errors.photo.message}</p>}
+
+        </div>
+        {/* blood group */}
+        <div>
+          <label className="block font-medium mb-1" for="bloodGroup">
+            Blood Group
+          </label>
+          <select
+            disabled={!isEditing}
+            defaultValue={"Select Blood Group"}
+            className="select w-full p-2 rounded-lg border-black"
+            {...register("blood",{required:"please fill blood group"})}
+          >
+            <option>{dbuser.blood}</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+           {errors.blood && <p className="text-red-500  mb-1 text-xs ">{errors.blood.message}</p>}
+        </div>
+
+        {/* select district */}
+
+        <div>
+          <label className="block font-medium mb-1">District</label>
+          <select
+            defaultValue={"Select Your District"}
+            disabled={!isEditing}
+            className="select w-full p-2 rounded-lg border-black"
+            {...register("district",{required:"please fill district"})}
+          >
+            <option>{dbuser.district}</option>
+            {districts.map((district) => (
+              <option key={district.id} value={district?.name}>
+                {district?.name}
+              </option>
+            ))}
+          </select>
+           {errors.district && <p className="text-red-500  mb-1 text-xs ">{errors.district.message}</p>}
+        </div>
+
+        {/* Upazila Selector */}
+        <div>
+          <label className="block font-medium mb-1">Upazila</label>
+          <select
+            defaultValue={"Select Your Upazila"}
+            disabled={!isEditing}
+            className="select w-full p-2 rounded-lg border-black"
+            {...register("upazila",{required:"please fill upazila"})}
+          >
+            <option>{dbuser.upazila}</option>
+            {upazilas.map((upazila) => (
+              <option key={upazila.id} value={upazila?.name}>
+                {upazila?.name}
+              </option>
+            ))}
+          </select>
+          {errors.upazila && <p className="text-red-500  mb-1 text-xs ">{errors.upazila.message}</p>}
+        </div>
+
+        <div className="lg:col-span-2">
+          {isEditing && (
+          <button type="submit" className="btn bg-lime-500 w-full mt-5">
+            Save
+          </button>
+        )}
+        </div>
+      </form>
     </div>
   );
 };
