@@ -1,23 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 
 const AboutUs = () => {
   const [products, setProducts] = useState([]);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!user?.email) return;
+    // if (!user?.email) return;
     axios
-      .get(`http://localhost:5000/request/${user.email}`)
+      .get("http://localhost:5000/donation-page")
       .then((res) => {
         setProducts(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [user?.email]);
+  }, []);
+
+  //  if(products == length)
+
 
   return (
     <div className="p-6 md:p-10 bg-gray-50 min-h-screen">

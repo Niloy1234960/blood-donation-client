@@ -7,7 +7,7 @@ import Register from "../Page/Register/Register";
 import DashboardLayout from "../Layout/DashboardLayout";
 import MainDashboard from "../Page/Dashboard/MainDashboard/MainDashboard";
 import Addproduct from "../Page/Dashboard/AddProduct/Addproduct";
-import ManageProduct from "../Page/Dashboard/manageProduct/ManageProduct";
+import ManageProduct from "../Page/Dashboard/MyRequest/MyRequest";
 import AddRequest from "../Page/Dashboard/AddRequest/AddRequest";
 import ProfileInput from "../Page/Dashboard/User/ProfileInput";
 import AllUsers from "../Page/Dashboard/AllUsers/AllUsers";
@@ -15,6 +15,9 @@ import PrivateRoute from "./PrivateRoute";
 import Funding from "../Page/Funding/Funding";
 import SearchDonor from "../Page/Search/SearchDonor";
 import DonationDetails from "../Page/DonationDetails/DonationDetails";
+
+import AllRequest from "../Page/AllRequest/AllRequest";
+import MyRequest from "../Page/Dashboard/MyRequest/MyRequest";
 
 
 
@@ -72,8 +75,12 @@ export const router = createBrowserRouter([
             Component: AddRequest
         },
         {
-            path:"manageProduct",
-            Component: ManageProduct
+            path:"myRequest",
+            Component: MyRequest
+        },
+        {
+            path:"allRequest",
+            Component: AllRequest
         },
         {
             path: "Users",

@@ -62,13 +62,13 @@ const Navber = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <NavLink to="/">
-            <li className="border btn mr-2">Home</li>
+            <li className="border btn mr-2 rounded-2xl  bg-red-600 text-white">Home</li>
           </NavLink>
           <NavLink to="/request">
-            <li className="border btn mr-2">Donation Request</li>
+            <li className="border btn mr-2 rounded-2xl  bg-red-600 text-white">Donation Request</li>
           </NavLink>
           <NavLink to="/funding">
-            <li className="border btn mr-2">Funding</li>
+            <li className="border btn mr-2 rounded-2xl  bg-red-600 text-white">Funding</li>
           </NavLink>
         </ul>
       </div>
@@ -95,12 +95,12 @@ const Navber = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-40"
             >
               <li>
-                <Link to="Dashboard/main" className="text-lg">
+                <Link to="Dashboard/main" className="text-lg font-semibold">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <button onClick={hendleLogout} className="text-lg">
+                <button onClick={hendleLogout} className="text-lg font-semibold">
                   Log out
                 </button>
               </li>

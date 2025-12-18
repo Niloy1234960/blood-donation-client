@@ -94,7 +94,7 @@ const ProfileInput = () => {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="btn bg-lime-500"
+              className="btn rounded-2xl  bg-red-600 text-white"
             >
               Edit
             </button>

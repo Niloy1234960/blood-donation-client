@@ -1,9 +1,4 @@
 
-
-// ==============================
-// Contact Us Section Component
-// ==============================
-
 export function ContactSection() {
   return (
     <section className="bg-[#9b1537] py-20">
@@ -55,14 +50,13 @@ export function ContactSection() {
 
             <button
               type="submit"
-              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-lg transition"
+              className="w-full rounded-2xl  bg-red-600 text-white font-semibold py-3  transition"
             >
               Send Message
             </button>
           </form>
         </div>
 
-        {/* Right: Contact Info */}
         <div className="text-white">
           <h2 className="text-4xl font-bold mb-4">Contact Us</h2>
           <p className="text-sm max-w-md mb-6">
