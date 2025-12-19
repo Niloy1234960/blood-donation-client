@@ -206,7 +206,7 @@ const ProfileInput = () => {
 
         <div className="lg:col-span-2">
           {isEditing && (
-          <button type="submit" className="btn bg-black w-full mt-5">
+          <button type="submit" className="btn bg-black text-white w-full mt-5">
             Save
           </button>
         )}

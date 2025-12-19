@@ -17,8 +17,19 @@ const AllUsers = () => {
   }, [AxiosSecure, user]);
 
   const handleStatusChange = (email, status) => {
-    AxiosSecure.patch(`/update/user/status?email=${email}&status=${status}`)
-      .then(() => fetchUsers());
+    AxiosSecure.patch(
+      `/update/user/status?email=${email}&status=${status}`
+    ).then(() => fetchUsers());
+  };
+
+  const handlerole = (email, role) => {
+    AxiosSecure.patch(`/update/user/role?email=${email}&role=${role}`)
+      .then((res) => {
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -52,22 +63,64 @@ const AllUsers = () => {
                 </td>
                 <td>{u?.role}</td>
                 <td>{u?.status}</td>
+               
                 <td>
-                  {u?.status === "active" ? (
-                    <button
-                      onClick={() => handleStatusChange(u?.email, "blocked")}
-                      className="btn btn-error text-white btn-xs"
+                  <div className="dropdown dropdown-end bg-lime-300">
+                    <label tabIndex={0} className="btn btn-sm btn-outline">
+                      Actions
+                    </label>
+
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40"
                     >
-                      Blocked
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleStatusChange(u?.email, "active")}
-                      className="btn btn-primary text-white btn-xs"
-                    >
-                      Active
-                    </button>
-                  )}
+                      {/* Block / Unblock */}
+                      {u?.status === "active" ? (
+                        <li>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(u?.email, "blocked")
+                            }
+                            className="text-red-500"
+                          >
+                            Block User
+                          </button>
+                        </li>
+                      ) : (
+                        <li>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(u?.email, "active")
+                            }
+                            className="text-green-500"
+                          >
+                            Unblock User
+                          </button>
+                        </li>
+                      )}
+
+                      {/* Role Actions */}
+                      <li>
+                        <button
+                          onClick={() => {
+                            handlerole(u?.email, "volunteer");
+                          }}
+                        >
+                          Make Volunteer
+                        </button>
+                      </li>
+
+                      <li>
+                        <button
+                          onClick={() => {
+                            handlerole(u?.email, "admin");
+                          }}
+                        >
+                          Make Admin
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -102,21 +155,62 @@ const AllUsers = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 mt-2">
-              {u?.status === "active" ? (
-                <button
-                  onClick={() => handleStatusChange(u?.email, "blocked")}
-                  className="btn btn-error text-white btn-xs w-full"
-                >
-                  Blocked
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleStatusChange(u?.email, "active")}
-                  className="btn btn-primary text-white btn-xs w-full"
-                >
-                  Active
-                </button>
-              )}
+              <td>
+                <div className="dropdown dropdown-end bg-lime-300">
+                  <label tabIndex={0} className="btn btn-sm btn-outline">
+                    Actions
+                  </label>
+
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40"
+                  >
+                    {/* Block / Unblock */}
+                    {u?.status === "active" ? (
+                      <li>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(u?.email, "blocked")
+                          }
+                          className="text-red-500"
+                        >
+                          Block User
+                        </button>
+                      </li>
+                    ) : (
+                      <li>
+                        <button
+                          onClick={() => handleStatusChange(u?.email, "active")}
+                          className="text-green-500"
+                        >
+                          Unblock User
+                        </button>
+                      </li>
+                    )}
+
+                    {/* Role Actions */}
+                    <li>
+                      <button
+                        onClick={() => {
+                          handlerole(u?.email, "volunteer");
+                        }}
+                      >
+                        Make Volunteer
+                      </button>
+                    </li>
+
+                    <li>
+                      <button
+                        onClick={() => {
+                          handlerole(u?.email, "admin");
+                        }}
+                      >
+                        Make Admin
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </td>
             </div>
           </div>
         ))}

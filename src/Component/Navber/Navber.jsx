@@ -83,7 +83,7 @@ const Navber = () => {
       </div>
 
       {/* navbar end */}
-      <div className="navbar-end flex gap-2 mr-10">
+      <div className="navbar-end flex gap-2 mr-8">
         {/* 🌙 Dark / Light Mode Toggle */}
         <label className="swap swap-rotate btn btn-ghost btn-circle">
           <input type="checkbox" className="theme-controller" value="dark" />

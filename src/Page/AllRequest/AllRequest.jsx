@@ -3,8 +3,16 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
 
+
 const AllRequest = () => {
   const [products, setProducts] = useState([]);
+  const [selectStatus, setSelectStatus] = useState('')
+
+
+  const handleStatus = (event) => {
+    const value = event.target.value
+    setSelectStatus(value)
+  }
 
   const fetchRequest = () => {
     axios
@@ -47,6 +55,16 @@ const AllRequest = () => {
     <div className="px-3 sm:px-6">
       {/* ===== Desktop & Tablet Table ===== */}
       <div className="hidden md:block overflow-x-auto mt-6">
+        <select
+         value={selectStatus}
+         onChange={handleStatus}
+         className="select mt-5">
+
+          <option disabled={true}>Pick a color</option>
+          <option>pending</option>
+          <option>Improgress</option>
+          <option>Done</option>
+        </select>
         <table className="table w-full">
           <thead>
             <tr>
@@ -67,7 +85,6 @@ const AllRequest = () => {
                 <td>{product?.blood_group}</td>
                 <td>{product?.donation_status}</td>
                 <td className="space-x-1 flex flex-wrap">
-               
                   <button
                     onClick={() => handleDelete(product._id)}
                     className="btn btn-xs btn-outline btn-error"
@@ -89,6 +106,12 @@ const AllRequest = () => {
 
       {/* ===== Mobile Card View ===== */}
       <div className="md:hidden mt-6 space-y-4">
+        <select className="select mt-5">
+          <option disabled={true}>Pick a color</option>
+          <option>pending</option>
+          <option>Improgress</option>
+          <option>Done</option>
+        </select>
         {products.map((product, index) => (
           <div
             key={product._id}
@@ -100,11 +123,11 @@ const AllRequest = () => {
             <p className="text-sm">Hospital: {product?.hospital_name}</p>
             <p className="text-sm">Blood Group: {product?.blood_group}</p>
             <p className="text-sm">
-              Status: <span className="font-medium">{product?.donation_status}</span>
+              Status:{" "}
+              <span className="font-medium">{product?.donation_status}</span>
             </p>
 
             <div className="flex flex-wrap gap-2 mt-2">
-           
               <button
                 onClick={() => handleDelete(product._id)}
                 className="btn btn-xs btn-outline btn-error w-full"
