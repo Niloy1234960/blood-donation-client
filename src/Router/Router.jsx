@@ -20,6 +20,7 @@ import AllRequest from "../Page/AllRequest/AllRequest";
 import MyRequest from "../Page/Dashboard/MyRequest/MyRequest";
 import ViewDetails from "../Page/ViewDetails/ViewDetails";
 import EditRequest from "../Page/Dashboard/MyRequest/EditRequest";
+import ErrorPage from "../Page/ErrorPage/ErrorPage";
 
 
 
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
             index:true,
             path:"/",
             Component:Home
+        },
+        {
+            path: "/*",
+            Component: ErrorPage
         },
         {
             path:"/request",

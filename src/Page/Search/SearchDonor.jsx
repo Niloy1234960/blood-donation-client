@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-   
+
 const SearchDonor = () => {
   const [upazila, setUpazila] = useState("");
   const [district, setDistrict] = useState("");
   const [upazilas, setUpazilas] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [filterData, setFilterData] = useState([]); // ✅ FIXED
 
   useEffect(() => {
     axios.get("/upazila.json").then((res) => {
@@ -29,12 +30,12 @@ const SearchDonor = () => {
         `http://localhost:5000/search-requests?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`
       )
       .then((res) => {
-        // Check korchi data length 0 er beshi kina
         if (res.data.length > 0) {
           toast.success("Blood match");
-          console.log("Matched Data:", res.data);
+          setFilterData(res.data);
         } else {
           toast.error("Not match");
+          setFilterData([]); // optional but safe
         }
       })
       .catch((err) => {
@@ -45,20 +46,21 @@ const SearchDonor = () => {
 
   return (
     <div>
-        <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
+
+      {/* Search Form */}
       <form
         onSubmit={handleSearch}
-        className="fieldset flex justify-center mt-12 gap-8 "
+        className="fieldset flex justify-center mt-12 gap-8"
       >
         <div>
           <label>Chose Blood Group</label>
           <select
             name="blood"
-            defaultValue="Chose blood group"
+            defaultValue="Chose Blood Group"
             className="select"
-            // {...register("blood")}
           >
-            <option disabled={true}>Chose Blood Group</option>
+            <option disabled>Chose Blood Group</option>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
             <option value="B+">B+</option>
@@ -71,36 +73,35 @@ const SearchDonor = () => {
         </div>
 
         <div>
-          {/* district field */}
-          <label>Chose Blood district</label>
+          <label>Chose Blood District</label>
           <select
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
             className="select"
           >
-            <option disabled selected value=" ">
-              Select Your district
+            <option disabled value="">
+              Select Your District
             </option>
             {districts.map((d) => (
-              <option value={d?.name} key={d.id}>
+              <option key={d.id} value={d?.name}>
                 {d?.name}
               </option>
             ))}
           </select>
         </div>
-        {/* upazila field */}
+
         <div>
-          <label>Chose Blood upazila</label>
+          <label>Chose Blood Upazila</label>
           <select
             value={upazila}
             onChange={(e) => setUpazila(e.target.value)}
             className="select"
           >
-            <option disabled selected value=" ">
-              Select Your upazila
+            <option disabled value="">
+              Select Your Upazila
             </option>
             {upazilas.map((u) => (
-              <option value={u?.name} key={u.id}>
+              <option key={u.id} value={u?.name}>
                 {u?.name}
               </option>
             ))}
@@ -109,6 +110,50 @@ const SearchDonor = () => {
 
         <button className="btn mt-4">Search</button>
       </form>
+
+      {/* Result Cards */}
+      <div className="min-h-screen mt-7 bg-gray-100 p-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filterData.map((data, index) => (
+            <div key={index} className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                Blood Group:{" "}
+                <span className="font-bold text-red-600">
+                  {data?.blood_group}
+                </span>
+              </h2>
+
+              <div className="space-y-2 text-gray-700 text-sm">
+                <p>
+                  <span className="font-semibold">Recipient Name:</span>{" "}
+                  {data?.requester_name || "N/A"}
+                </p>
+
+                <p>
+                  <span className="font-semibold">Recipient email:</span>{" "}
+                  {data?.requester_email || "N/A"}
+                </p>
+                <p>
+                  <span className="font-semibold">Address:</span>{" "}
+                  {data?.address || "N/A"}
+                </p>
+   
+                <div className="flex justify-between">
+               
+          
+
+                
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filterData.length === 0 && (
+          <p className="text-center text-gray-500 mt-6">No data found</p>
+        )}
+      </div>
     </div>
   );
 };
