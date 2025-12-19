@@ -2,28 +2,40 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
-
+import toast from "react-hot-toast";
 
 const AllRequest = () => {
   const [products, setProducts] = useState([]);
-  const [selectStatus, setSelectStatus] = useState('')
+  const [selectStatus, setSelectStatus] = useState("");
 
+  const hendleCencel = (id) => {
+    axios
+      .patch(`http://localhost:5000/cancel-request?id=${id}&status=canceled`)
+      .then(() => {
+        toast.success("Your request canceled successfully");
+        fetchRequest();
+      })
+      .catch(() => toast.error("Cancel not successful"));
+  };
 
   const handleStatus = (event) => {
-    const value = event.target.value
-    setSelectStatus(value)
-  }
-
+    const value = event.target.value;
+    setSelectStatus(value);
+  };
+  console.log(selectStatus);
   const fetchRequest = () => {
     axios
-      .get("http://localhost:5000/myRequest")
-      .then((res) => setProducts(res.data))
+      .get(`http://localhost:5000/allRequest?status=${selectStatus}`)
+      .then((res) => {
+        console.log(res.data);
+        setProducts(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
     fetchRequest();
-  }, []);
+  }, [selectStatus]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -56,14 +68,14 @@ const AllRequest = () => {
       {/* ===== Desktop & Tablet Table ===== */}
       <div className="hidden md:block overflow-x-auto mt-6">
         <select
-         value={selectStatus}
-         onChange={handleStatus}
-         className="select mt-5">
-
+          value={selectStatus}
+          onChange={handleStatus}
+          className="select mt-5"
+        >
           <option disabled={true}>Pick a color</option>
-          <option>pending</option>
-          <option>Improgress</option>
-          <option>Done</option>
+          <option value="pending">pending</option>
+          <option value="inprogress">inprogress</option>
+          <option value="done">Done</option>
         </select>
         <table className="table w-full">
           <thead>
@@ -85,18 +97,39 @@ const AllRequest = () => {
                 <td>{product?.blood_group}</td>
                 <td>{product?.donation_status}</td>
                 <td className="space-x-1 flex flex-wrap">
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="btn btn-xs btn-outline btn-error"
-                  >
-                    Delete
-                  </button>
+                  {product.donation_status === "inprogress" && (
+                    <>
+                      <button className="btn btn-xs btn-outline btn-info">
+                        done
+                      </button>
+                      <button className="btn btn-xs btn-outline btn-error">
+                        cancel
+                      </button>
+                    </>
+                  )}
+                  {product.donation_status === "pending" && (
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      className="btn btn-xs btn-outline btn-error"
+                    >
+                      Delete
+                    </button>
+                  )}
                   <Link
                     to={`/Dashboard/viewDetails/${product._id}`}
                     className="btn btn-xs btn-outline"
                   >
                     View
                   </Link>
+
+                  {product.donation_status !== "canceled" && (
+                    <button
+                      onClick={() => hendleCencel(product._id)}
+                      className="btn btn-xs btn-outline"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -106,11 +139,15 @@ const AllRequest = () => {
 
       {/* ===== Mobile Card View ===== */}
       <div className="md:hidden mt-6 space-y-4">
-        <select className="select mt-5">
+        <select
+          value={selectStatus}
+          onChange={handleStatus}
+          className="select mt-5"
+        >
           <option disabled={true}>Pick a color</option>
-          <option>pending</option>
-          <option>Improgress</option>
-          <option>Done</option>
+          <option value="pending">pending</option>
+          <option value="inprogress">inprogress</option>
+          <option value="done">Done</option>
         </select>
         {products.map((product, index) => (
           <div
@@ -128,6 +165,14 @@ const AllRequest = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 mt-2">
+              {product.donation_status === "inprogress" && (
+                <>
+                  <button className="btn btn-xs btn-outline btn-info">
+                    done
+                  </button>
+                </>
+              )}
+
               <button
                 onClick={() => handleDelete(product._id)}
                 className="btn btn-xs btn-outline btn-error w-full"
@@ -140,6 +185,15 @@ const AllRequest = () => {
               >
                 View
               </Link>
+
+              {product.donation_status !== "canceled" && (
+                <button
+                  onClick={() => hendleCencel(product._id)}
+                  className="btn btn-xs btn-outline"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         ))}

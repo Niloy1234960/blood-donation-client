@@ -3,8 +3,8 @@ import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-import { ToastBar, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const Login = () => {
   const [show, setShow] = useState();

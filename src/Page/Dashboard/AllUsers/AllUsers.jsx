@@ -25,6 +25,7 @@ const AllUsers = () => {
   const handlerole = (email, role) => {
     AxiosSecure.patch(`/update/user/role?email=${email}&role=${role}`)
       .then((res) => {
+        console.log(res);
         fetchUsers();
       })
       .catch((error) => {

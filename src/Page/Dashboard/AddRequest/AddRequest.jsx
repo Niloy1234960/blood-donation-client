@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import axios from "axios";
 import useAxiosSecure from "../../../hook/UseAxiosSecure";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddRequest = () => {
   const { user } = useContext(AuthContext);
@@ -52,7 +53,8 @@ const AddRequest = () => {
     AxiosSecure
       .post("/request", formData)
       .then((res) => {
-        alert("add successfull", res.data);
+        toast.success("add successfull")
+        // alert("add successfull", res.data);
         // console.log(res.data)
       })
       .catch((err) => {
@@ -62,6 +64,7 @@ const AddRequest = () => {
 
   return (
     <div>
+      <Toaster></Toaster>
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md">
         <h2 className="text-2xl font-semibold mb-6">
           Blood Donation Request

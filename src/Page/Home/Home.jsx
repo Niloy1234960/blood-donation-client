@@ -3,6 +3,7 @@ import OurFeatures from './OurFeatures';
 import { ContactSection } from './ContactSection';
 import Banner from '../Banner/Banner';
 
+
 const Home = () => {
     return (
         <div>
@@ -14,6 +15,7 @@ const Home = () => {
                 <ContactSection></ContactSection>
             </div>
         </div>
+        
     );
 };
 
