@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router";
 import {
   AiFillHome,
@@ -18,6 +18,7 @@ const Aside = () => {
   const { LogOut } = use(AuthContext);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const {role} = useContext(AuthContext)
  
   const handleLogout = () => {
     LogOut();
@@ -73,7 +74,8 @@ const Aside = () => {
               Main Dashboard
             </NavLink>
 
-            <NavLink
+            {
+              role == "donor" && (   <NavLink
               to="/Dashboard/AddRequest"
               className={({ isActive }) =>
                 `flex items-center gap-3 p-3 rounded-lg transition hover:bg-gray-700 ${
@@ -84,9 +86,12 @@ const Aside = () => {
             >
               <AiFillDashboard size={20} />
               Add Request
-            </NavLink>
+            </NavLink>)
+            }
 
-            <NavLink
+         
+            {
+              role == "donor" && (    <NavLink
               to="/Dashboard/myRequest"
               className={({ isActive }) =>
                 `flex items-center gap-3 p-3 rounded-lg transition hover:bg-gray-700 ${
@@ -97,9 +102,12 @@ const Aside = () => {
             >
               <AiFillDashboard size={20} />
              My Request
-            </NavLink>
+            </NavLink>)
+            }
 
-            <NavLink
+
+            {
+              role == "admin" && ( <NavLink
               to="/Dashboard/allRequest"
               className={({ isActive }) =>
                 `flex items-center gap-3 p-3 rounded-lg transition hover:bg-gray-700 ${
@@ -111,7 +119,27 @@ const Aside = () => {
               <AiFillDashboard size={20} />
             All Request
             </NavLink>
+            )}
 
+
+            {
+              role == "volunteer" && ( <NavLink
+              to="/Dashboard/allRequest"
+              className={({ isActive }) =>
+                `flex items-center gap-3 p-3 rounded-lg transition hover:bg-gray-700 ${
+                  isActive ? "bg-blue-600" : ""
+                }`
+              }
+              onClick={() => setOpen(false)}
+            >
+              <AiFillDashboard size={20} />
+            All Request
+            </NavLink>
+)
+            }
+        
+
+           
             <NavLink
               to="/Dashboard/Users"
               className={({ isActive }) =>
@@ -125,7 +153,9 @@ const Aside = () => {
               User Profile
             </NavLink>
 
-            <NavLink
+
+            {
+              role == "admin" && (   <NavLink
               to="/Dashboard/allUsers"
               className={({ isActive }) =>
                 `flex items-center gap-3 p-3 rounded-lg transition hover:bg-gray-700 ${
@@ -136,7 +166,10 @@ const Aside = () => {
             >
               <AiOutlineUser size={20} />
               All Users
-            </NavLink>
+            </NavLink>)
+            }
+
+
 
 
           </nav>

@@ -9,29 +9,23 @@ const AllUsers = () => {
 
   const fetchUsers = () => {
     if (!user) return;
-    AxiosSecure("/users").then((res) => {
-      setUsers(res.data);
-    });
+    AxiosSecure("/users").then((res) => setUsers(res.data));
   };
 
   useEffect(() => {
-    fetchUsers()
+    fetchUsers();
   }, [AxiosSecure, user]);
-  console.log(users);
 
   const handleStatusChange = (email, status) => {
     AxiosSecure.patch(`/update/user/status?email=${email}&status=${status}`)
-      .then((res) => {
-      console.log(res.data);
-      fetchUsers()
-    });
+      .then(() => fetchUsers());
   };
 
   return (
-    <div>
-      <div className="overflow-x-auto">
-        <table className="table">
-          {/* head */}
+    <div className="px-3 sm:px-6">
+      {/* ===== Desktop & Tablet Table ===== */}
+      <div className="hidden md:block overflow-x-auto mt-6">
+        <table className="table w-full">
           <thead>
             <tr>
               <th>Name</th>
@@ -41,48 +35,91 @@ const AllUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            {users?.map((user) => (
-              <tr>
+            {users?.map((u) => (
+              <tr key={u.email}>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
                       <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src={user?.imageLink}
-                          alt="Avatar Tailwind CSS Component"
-                        />
+                        <img src={u?.imageLink} alt={u?.name} />
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold">{user?.name}</div>
-                      <div className="text-sm opacity-50">{user?.email}</div>
+                      <div className="font-bold">{u?.name}</div>
+                      <div className="text-sm opacity-50">{u?.email}</div>
                     </div>
                   </div>
                 </td>
-                <td>{user?.role}</td>
-                <td>{user?.status}</td>
-                <th>
-                  {user?.status == "active" ? (
+                <td>{u?.role}</td>
+                <td>{u?.status}</td>
+                <td>
+                  {u?.status === "active" ? (
                     <button
-                      onClick={() => handleStatusChange(user?.email, "blocked")}
-                      className="btn  btn-error text-white btn-xs"
+                      onClick={() => handleStatusChange(u?.email, "blocked")}
+                      className="btn btn-error text-white btn-xs"
                     >
                       Blocked
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleStatusChange(user?.email, "active")}
+                      onClick={() => handleStatusChange(u?.email, "active")}
                       className="btn btn-primary text-white btn-xs"
                     >
                       Active
                     </button>
                   )}
-                </th>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* ===== Mobile Card View ===== */}
+      <div className="md:hidden mt-6 space-y-4">
+        {users?.map((u) => (
+          <div
+            key={u.email}
+            className="border rounded-xl p-4 shadow-sm flex flex-col space-y-2"
+          >
+            <div className="flex items-center gap-3">
+              <div className="avatar">
+                <div className="mask mask-squircle h-12 w-12">
+                  <img src={u?.imageLink} alt={u?.name} />
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="font-bold">{u?.name}</div>
+                <div className="text-sm opacity-50">{u?.email}</div>
+              </div>
+            </div>
+
+            <p className="text-sm">
+              <span className="font-semibold">Role:</span> {u?.role}
+            </p>
+            <p className="text-sm">
+              <span className="font-semibold">Status:</span> {u?.status}
+            </p>
+
+            <div className="flex flex-wrap gap-2 mt-2">
+              {u?.status === "active" ? (
+                <button
+                  onClick={() => handleStatusChange(u?.email, "blocked")}
+                  className="btn btn-error text-white btn-xs w-full"
+                >
+                  Blocked
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleStatusChange(u?.email, "active")}
+                  className="btn btn-primary text-white btn-xs w-full"
+                >
+                  Active
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

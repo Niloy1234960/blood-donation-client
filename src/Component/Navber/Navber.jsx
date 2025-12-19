@@ -19,7 +19,7 @@ const Navber = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       {/* navbar start */}
-      <div className="navbar-start">
+      <div className="navbar-start ">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -54,7 +54,7 @@ const Navber = () => {
         </div>
 
         <Link to="/" className="btn btn-ghost text-2xl">
-          <FaTint /> <span className="text-red-500">Blood</span> Donation
+          <FaTint style={{ color: "red" }} /> <span className="text-red-500">Blood</span> Donation
         </Link>
       </div>
 
@@ -74,7 +74,7 @@ const Navber = () => {
       </div>
 
       {/* navbar end */}
-      <div className="navbar-end flex gap-2">
+      <div className="navbar-end flex gap-2 mr-10">
         {/* 🌙 Dark / Light Mode Toggle */}
         <label className="swap swap-rotate btn btn-ghost btn-circle">
           <input type="checkbox" className="theme-controller" value="dark" />

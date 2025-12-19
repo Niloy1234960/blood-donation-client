@@ -18,6 +18,8 @@ import DonationDetails from "../Page/DonationDetails/DonationDetails";
 
 import AllRequest from "../Page/AllRequest/AllRequest";
 import MyRequest from "../Page/Dashboard/MyRequest/MyRequest";
+import ViewDetails from "../Page/ViewDetails/ViewDetails";
+import EditRequest from "../Page/Dashboard/MyRequest/EditRequest";
 
 
 
@@ -89,6 +91,15 @@ export const router = createBrowserRouter([
         {
             path: "allUsers",
             Component: AllUsers
+        },
+        {
+            path: "/Dashboard/viewDetails/:id",
+            Component: ViewDetails
+        },
+        {
+            path: "/Dashboard/Myrequest-edit/:id",
+            Component: EditRequest
+
         }
         
     ]

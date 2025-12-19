@@ -45,12 +45,12 @@ const Banner = () => {
             Your blood is precious: Donate, save a life, make a difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-3 rounded-2xl bg-red-600 text-white font-semibold shadow hover:bg-red-700 transition">
+            <Link to={"/register"} className="px-6 py-3 rounded-2xl bg-red-600 text-white font-semibold shadow hover:bg-red-700 transition">
               Join as Donor
-            </button>
-            <button className="px-6 py-3 rounded-2xl bg-white text-red-600 font-semibold shadow hover:bg-gray-100 transition">
+            </Link>
+            <Link to={"/search"}  className="px-6 py-3 rounded-2xl bg-white text-red-600 font-semibold shadow hover:bg-gray-100 transition">
               Search Donors
-            </button>
+            </Link>
           </div>
         </div>
       </div>
