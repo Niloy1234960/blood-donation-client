@@ -94,7 +94,7 @@ const ProfileInput = () => {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="btn rounded-2xl  bg-red-600 text-white"
+              className="btn rounded-2xl  bg-black text-white"
             >
               Edit
             </button>
@@ -206,7 +206,7 @@ const ProfileInput = () => {
 
         <div className="lg:col-span-2">
           {isEditing && (
-          <button type="submit" className="btn bg-lime-500 w-full mt-5">
+          <button type="submit" className="btn bg-black w-full mt-5">
             Save
           </button>
         )}

@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo / App Name */}
         <div>
-          <h2 className="text-2xl font-bold mb-4">Blood Donation</h2>
+          <h2 className="text-2xl font-bold mb-4"><span className="text-red-500">Blood</span> Donation</h2>
           <p>Donate blood, save lives, and help those in need.</p>
         </div>
 

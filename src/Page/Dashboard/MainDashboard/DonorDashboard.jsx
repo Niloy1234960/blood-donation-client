@@ -92,7 +92,7 @@ const DonorDashboard = () => {
         <div className="text-center">
           <Link
             to={"/Dashboard/allRequest"}
-            className="btn mt-6 rounded-2xl bg-red-600 text-white font-semibold w-full sm:w-auto"
+            className="btn mt-6 rounded-2xl bg-black text-white font-semibold w-full sm:w-auto"
           >
             View All Request
           </Link>

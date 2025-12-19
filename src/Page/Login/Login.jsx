@@ -3,7 +3,8 @@ import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { ToastBar, Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [show, setShow] = useState();
@@ -13,7 +14,6 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -23,6 +23,7 @@ const Login = () => {
     Login(email,password)
     .then(result=>{
         console.log(result.user);
+        toast.success("your login successfull")
     })
     .then(error =>{
         navigate("/")
@@ -103,6 +104,7 @@ const Login = () => {
             <button type="submit" className="btn btn-neutral mt-4">
               Login
             </button>
+            
 
             <div className="flex w-full flex-col h-10">
               <div className="divider">OR</div>

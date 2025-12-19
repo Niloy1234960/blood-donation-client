@@ -76,6 +76,7 @@ const Register = () => {
           .post("http://localhost:5000/users", userData)
           .then((res) => {
             console.log(res.data);
+            toast.success("your log register successfull");
           })
           .catch((error) => console.log(error));
       })

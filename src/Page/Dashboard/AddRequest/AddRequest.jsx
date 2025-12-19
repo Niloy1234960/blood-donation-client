@@ -199,7 +199,7 @@ const AddRequest = () => {
           <div className="pt-4">
             <button
               type="submit"
-              className="px-6 py-2 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700"
+              className="px-6 py-2 rounded-xl bg-black text-white font-medium hover:bg-red-700"
             >
               Request Blood Donation
             </button>
