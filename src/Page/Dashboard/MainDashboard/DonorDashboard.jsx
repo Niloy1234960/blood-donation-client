@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import axios from "axios";
 import { Link } from "react-router";
+import Swal from "sweetalert2";
 
 const DonorDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -13,6 +14,25 @@ const DonorDashboard = () => {
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:5000/Delete-request?id=${id}`)
+          .then(() => {
+            Swal.fire("Deleted!", "Your Request has been deleted.", "success");
+            
+          });
+      }
+    });
+  };
   return (
     <div>
       <div className="px-3 sm:px-6">
@@ -42,8 +62,16 @@ const DonorDashboard = () => {
                   <td>{product?.blood_group}</td>
                   <td>{product?.donation_status}</td>
                   <td className="space-x-1">
-                    <button className="btn btn-xs btn-outline">Edit</button>
-                    <button className="btn btn-xs btn-outline btn-error">
+                    <Link
+                      to={`/Dashboard/Myrequest-edit/${product._id}`}
+                      className="btn btn-xs btn-outline"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      className="btn btn-xs btn-outline btn-error"
+                    >
                       Delete
                     </button>
                     <Link
@@ -74,7 +102,12 @@ const DonorDashboard = () => {
               </p>
 
               <div className="flex flex-wrap gap-2 mt-3">
-                <button className="btn btn-xs btn-outline">Edit</button>
+                <Link
+                  to={`/Dashboard/Myrequest-edit/${product._id}`}
+                  className="btn btn-xs btn-outline"
+                >
+                  Edit
+                </Link>
                 <button className="btn btn-xs btn-outline btn-error">
                   Delete
                 </button>

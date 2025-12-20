@@ -27,7 +27,7 @@ const Aside = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* MOBILE MENU BUTTON */}
+      
       <button
         onClick={() => setOpen(!open)}
         className="lg:hidden p-4 text-2xl fixed top-2 left-2 z-50 bg-lime-500 text-white rounded-lg shadow-md"
@@ -35,7 +35,7 @@ const Aside = () => {
         {open ? <AiOutlineClose /> : <AiOutlineMenu />}
       </button>
 
-      {/* SIDEBAR */}
+      
       <aside
         className={`
           fixed lg:static top-0 left-0 h-full w-64 bg-lime-400 text-gray-400 p-6 flex flex-col justify-between 
@@ -173,7 +173,7 @@ const Aside = () => {
           </nav>
         </div>
 
-        {/* LOGOUT */}
+        
         <button
           onClick={() => {
             handleLogout();

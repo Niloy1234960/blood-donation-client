@@ -17,7 +17,7 @@ const Addproduct = () => {
   } = useForm()
    
 
-  // const axiosInstance = useAxios()
+  
 
   const onSubmit = async(data) => {
     const {paymentOption,images,minimumOrder,availableQuantity,price,productDescription,productName,requesterName,requesterEmail}=data;
@@ -35,14 +35,7 @@ const Addproduct = () => {
       managerEmail : user?.email,
 
     }
-    // const file =images[0];
-    
-    // const formdata = new FormData();
-    // formdata.append("photo",file);
-
-    // const res =await axios.post(`https://api.imgbb.com/1/upload?key=039ed19dd7ea9e86d51e69b5a3528627`,formdata);
-
-    // console.log(res.data.data.display_url)
+   
 
     console.log(data);
 

@@ -16,7 +16,7 @@ const Navber = () => {
       .catch((error) => console.log(error));
   };
 
-  // 🔥 Active / Inactive NavLink Style (Light + Dark Mode)
+
   const navLinkClass = ({ isActive }) =>
     isActive
       ? "btn mr-2 rounded-2xl bg-red-700 text-white dark:bg-red-500 dark:text-white scale-105 transition"
@@ -84,7 +84,7 @@ const Navber = () => {
 
       {/* navbar end */}
       <div className="navbar-end flex gap-2 mr-8">
-        {/* 🌙 Dark / Light Mode Toggle */}
+        
         <label className="swap swap-rotate btn btn-ghost btn-circle">
           <input type="checkbox" className="theme-controller" value="dark" />
           <span className="swap-off text-xl">🌞</span>

@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import React, { useEffect, useState } from "react";
+
 import axios from "axios";
-import { Link, Navigate } from "react-router";
+import { Link } from "react-router";
 
 const AboutUs = () => {
   const [products, setProducts] = useState([]);
-  const { user } = useContext(AuthContext);
+  
 
   useEffect(() => {
-    // if (!user?.email) return;
+   
     axios
       .get("http://localhost:5000/donation-page")
       .then((res) => {
@@ -19,7 +19,7 @@ const AboutUs = () => {
       });
   }, []);
 
-  //  if(products == length)
+  
 
 
   return (
@@ -33,7 +33,7 @@ const AboutUs = () => {
           <div
             key={product._id}
             className="bg-white  transition-all duration-300 ease-out 
-      hover:shadow-2xl hover:-translate-y-3 hover:scale-[1.03] rounded-2xl shadow-md p-6 border border-gray-100 flex flex-col justify-between "
+             hover:shadow-2xl hover:-translate-y-3 hover:scale-[1.03] rounded-2xl shadow-md p-6 border border-gray-100 flex flex-col justify-between "
           >
             <div>
               <h2 className="text-xl font-bold text-gray-800 mb-3 border-b border-gray-100 pb-3">

@@ -1,247 +1,155 @@
-import React, { use,  useEffect,  useState } from "react";
-import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
-import { Link } from "react-router";
+import React, { use, useEffect, useState } from "react";
+import { FaEye, FaEyeSlash, FaUser, FaEnvelope, FaTint, FaMapMarkerAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router"; 
 import { AuthContext } from "../../Context/AuthContext";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { updateProfile } from "firebase/auth";
-import { toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast"; 
 
 const Register = () => {
   const [show, setShow] = useState(false);
-  const { googleLogin, Creatuser, setUser } = use(AuthContext);
-  const [upazila, setUpazila] = useState('')
-  const [district, setDistrict] = useState('')
-  const [upazilas, setUpazilas] = useState([])
-  const [districts, setDistricts] = useState([])
+  const { Creatuser, setUser } = use(AuthContext);
+  const [upazila, setUpazila] = useState('');
+  const [district, setDistrict] = useState('');
+  const [upazilas, setUpazilas] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    axios.get('/upazila.json')
-    .then(res => {
-      setUpazilas(res.data.upazilas)
-    })
-  },[])
+  useEffect(() => {
+    axios.get('/upazila.json').then(res => setUpazilas(res.data.upazilas));
+    axios.get('/district.json').then(res => setDistricts(res.data.districts));
+  }, []);
 
-  useEffect(()=>{
-    axios.get('/district.json')
-    .then(res => {
-      setDistricts(res.data.districts)
-    })
-  },[])
-
-  const {
-    register,
-    handleSubmit,
-  
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
-    const { name, password, email, photo, blood } = data;
-    const file = photo[0];
+    const loadingToast = toast.loading("Creating your account..."); 
+    
+    try {
+      const { name, password, email, photo, blood } = data;
+      const file = photo[0];
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const formData = new FormData();
-    formData.append("image", file);
+     
+      const res = await axios.post(`https://api.imgbb.com/1/upload?key=039ed19dd7ea9e86d51e69b5a3528627`, formData);
+      const imageLink = res.data.data.display_url;
 
-    const res = await axios.post(
-      `https://api.imgbb.com/1/upload?key=039ed19dd7ea9e86d51e69b5a3528627`,
-      formData
-    );
+     
+      const result = await Creatuser(email, password);
+      const user = result.user;
 
-    const imageLink = res.data.data.display_url;
+      
+      await updateProfile(user, { displayName: name, photoURL: imageLink });
+      setUser({ ...user, displayName: name, photoURL: imageLink });
 
-    const userData = {
-      name,
-      password,
-      email,
-      imageLink,
-      blood,
-      district,
-      upazila
-    };
-    console.log(userData)
+    
+      const userData = { name, email, imageLink, blood, district, upazila, role: 'donor', status: 'active' };
+      await axios.post("http://localhost:5000/users", userData);
 
-    await Creatuser(email, password)
-      .then((result) => {
-        const user = result.user;
-        updateProfile(user, {
-          displayName: name,
-          photoURL: imageLink,
-        });
-        setUser({ ...user, displayName: name, photoURL: imageLink });
-        toast.success("your log register successfull");
-        console.log(result.user);
-
-        axios
-          .post("http://localhost:5000/users", userData)
-          .then((res) => {
-            console.log(res.data);
-            toast.success("your log register successfull");
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const hendleGoogleLogin = () => {
-    googleLogin()
-      .then((result) => {
-        console.log(result.user);
-        toast.success("your Google login Successfull");
-      })
-      .cathc((error) => console.log(error));
+      toast.dismiss(loadingToast); 
+      toast.success("Registration Successful! Welcome 🩸");
+      navigate("/"); 
+      
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error(error.message || "Registration failed. Try again.");
+      console.error(error);
+    }
   };
 
   return (
-    <div className="flex justify-center min-h-screen items-center text-black">
-      <div className="card bg-base-100 w-11/12 max-w-sm shrink-0 shadow-2xl ">
-        <form onSubmit={handleSubmit(onSubmit)} className="card-body">
-          <h1 className="text-2xl font-bold text-center">
-            Regester your account
-          </h1>
-          <fieldset className="fieldset">
-            {/* Name field */}
-            <div>
-              <label className="label">Name</label>
-              <input
-                type="text"
-                className="input"
-                placeholder="Your Name"
-                {...register("name", {
-                  required: "Name is required",
-                  maxLength: {
-                    value: 20,
-                    message: "Name cannot be long",
-                  },
-                })}
-              />
+    <div className="min-h-screen flex items-center justify-center bg-base-200 py-10 px-4">
+      
+      <Toaster position="top-center" reverseOrder={false} />
+      
+      <div className="card w-full max-w-2xl bg-base-100 shadow-2xl border border-base-300">
+        <div className="card-body">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-extrabold text-error">Join as a Donor</h1>
+            <p className="text-gray-500 mt-1">Fill the form to start saving lives</p>
+          </div>
 
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-l">
-                  {errors.name.message}
-                </p>
-              )}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Name */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">Full Name</label>
+                <input
+                  type="text"
+                  className="input input-bordered focus:input-error"
+                  {...register("name", { required: "Name is required" })}
+                />
+              </div>
+
+              {/* Email */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">Email</label>
+                <input
+                  type="email"
+                  className="input input-bordered focus:input-error"
+                  {...register("email", { required: "Email is required" })}
+                />
+              </div>
+
+              {/* Blood Group */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">Blood Group</label>
+                <select className="select select-bordered focus:select-error" {...register("blood", { required: true })}>
+                  <option value="">Select Group</option>
+                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(g => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+
+              {/* District */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">District</label>
+                <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select select-bordered" required>
+                  <option value="">Select District</option>
+                  {districts.map(d => <option value={d?.name} key={d.id}>{d?.name}</option>)}
+                </select>
+              </div>
+
+              {/* Upazila */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">Upazila</label>
+                <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select select-bordered" required>
+                  <option value="">Select Upazila</option>
+                  {upazilas.map(u => <option value={u?.name} key={u.id}>{u?.name}</option>)}
+                </select>
+              </div>
+
+              {/* Photo */}
+              <div className="form-control">
+                <label className="label font-bold text-xs uppercase">Profile Photo</label>
+                <input type="file" className="file-input file-input-bordered file-input-error w-full" {...register("photo", { required: true })} />
+              </div>
             </div>
 
-            {/* email field */}
-            <div>
-              <label className="label">Email</label>
-              <input
-                type="email"
-                className="input"
-                placeholder="Email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "Please Enter the valid email",
-                  },
-                })}
-              />
-
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-l">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            {/* Photo field */}
-            <label className="label">Photo Url</label>
-            <input
-              type="file"
-              className="input"
-              placeholder="Your Photo Url"
-              {...register("photo", { required: "photo is required" })}
-            />
-             {/* blood grp field */}
-            <label>Chose Blood Group</label>
-            <select
-              defaultValue="Chose blood group"
-              className="select"
-              {...register("blood")}
-            >
-              <option disabled={true}>Chose Blood Group</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-            </select>
-
-            {/* district field */}
-            <label>Chose Blood district</label>
-            <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select">
-               <option disabled selected value=" ">Select Your district</option>
-               {
-                districts.map(d=> <option value={d?.name} key={d.id}>{d?.name}</option>)
-               }
-            </select>
-            {/* upazila field */}
-             <label>Chose Blood upazila</label>
-            <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select">
-               <option disabled selected value=" ">Select Your upazila</option>
-               {
-                upazilas.map(u=> <option value={u?.name} key={u.id}>{u?.name}</option>)
-               }
-            </select>
-
-            {/* password field */}
-            <div className="relative">
-              <label className="label">Password</label>
+            {/* Password */}
+            <div className="form-control relative">
+              <label className="label font-bold text-xs uppercase">Password</label>
               <input
                 type={show ? "text" : "password"}
-                className="input"
-                placeholder="Password"
-                {...register("password", {
-                  required: "password is required",
-                  pattern: {
-                    value: /^[A-Za-z0-9]{6,}$/,
-                    message: "Password must be at  6 characters long.",
-                  },
-                })}
+                className="input input-bordered focus:input-error"
+                {...register("password", { required: true, minLength: 6 })}
               />
-
-              <span
-                onClick={() => setShow(!show)}
-                className="absolute top-6 right-6 z-50"
-              >
-                {show ? <FaEyeSlash size={24} /> : <FaEye size={24} />}
-              </span>
-
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-l">
-                  {errors.password.message}
-                </p>
-              )}
+              <button type="button" onClick={() => setShow(!show)} className="absolute right-4 top-11">
+                {show ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
 
-            <button type="submit" className="btn btn-neutral mt-4">
-              Regester
+            <button type="submit" className="btn bg-black w-full text-white font-bold text-lg mt-4 shadow-lg transition-all active:scale-95">
+              Create Account
             </button>
-            <div className="flex w-full flex-col h-10">
-              <div className="divider">OR</div>
-            </div>
-            <button onClick={hendleGoogleLogin} className="btn mb-5 ">
-              {" "}
-              <FaGoogle size={24} className="text-[#34A853]" /> Regester with
-              Google
-            </button>
-            <p className="font-semibold text-center">
-              Already Have An Account ?{" "}
-              <Link className="text-green-600" to="/Login">
-                Login
-              </Link>
+
+            <p className="text-center mt-4">
+              Already a member? <Link className="text-error font-bold hover:underline" to="/Login">Login</Link>
             </p>
-          </fieldset>
-        </form>
+          </form>
+        </div>
       </div>
-      {/* <ToastContainer /> */}
     </div>
   );
 };

@@ -35,7 +35,6 @@ const Banner = () => {
         </div>
       </Carousel>
 
-      {/* Overlay Content */}
       <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-center">
         <div className="max-w-2xl px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">

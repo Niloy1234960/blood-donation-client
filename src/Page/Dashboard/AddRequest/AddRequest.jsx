@@ -53,9 +53,9 @@ const AddRequest = () => {
     AxiosSecure
       .post("/request", formData)
       .then((res) => {
+        console.log(res.data);
         toast.success("add successfull")
-        // alert("add successfull", res.data);
-        // console.log(res.data)
+        
       })
       .catch((err) => {
         console.log(err);
