@@ -10,7 +10,7 @@ const ViewDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/Dashboard/view-request/${id}`)
+      .get(`https://assignment-11-server-iota-seven.vercel.app/Dashboard/view-request/${id}`)
       .then((res) => {
         setDetails(res.data);
         setLoading(false);

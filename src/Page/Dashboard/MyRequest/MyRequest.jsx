@@ -14,7 +14,7 @@ const MyRequest = () => {
     if (!user?.email) return;
 
     axios
-      .get(`http://localhost:5000/request/${user.email}`)
+      .get(`https://assignment-11-server-iota-seven.vercel.app/request/${user.email}`)
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err));
   };
@@ -34,7 +34,7 @@ const MyRequest = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/Delete-request?id=${id}`)
+          .delete(`https://assignment-11-server-iota-seven.vercel.app/Delete-request?id=${id}`)
           .then(() => {
             Swal.fire("Deleted!", "Your Request has been deleted.", "success");
             fetchRequest();
@@ -46,7 +46,7 @@ const MyRequest = () => {
   // cancel request
   const hendleCencel = (id) => {
     axios
-      .patch(`http://localhost:5000/cancel-request?id=${id}&status=canceled`)
+      .patch(`https://assignment-11-server-iota-seven.vercel.app/cancel-request?id=${id}&status=canceled`)
       .then(() => {
         toast.success("Your request canceled successfully");
         fetchRequest();
@@ -57,7 +57,7 @@ const MyRequest = () => {
   // done request
   const hendleDone = (id) => {
     axios
-      .patch(`http://localhost:5000/done-request?id=${id}&status=done`)
+      .patch(`https://assignment-11-server-iota-seven.vercel.app/done-request?id=${id}&status=done`)
       .then(() => {
         toast.success("Your request done successfully");
         fetchRequest();

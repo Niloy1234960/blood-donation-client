@@ -10,7 +10,7 @@ const AboutUs = () => {
   useEffect(() => {
    
     axios
-      .get("http://localhost:5000/donation-page")
+      .get("https://assignment-11-server-iota-seven.vercel.app/donation-page")
       .then((res) => {
         setProducts(res.data);
       })

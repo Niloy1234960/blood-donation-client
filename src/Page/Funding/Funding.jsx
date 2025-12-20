@@ -22,7 +22,7 @@ export default function Funding() {
             donorName
         }
 
-        axios.post('http://localhost:5000/create-payment-cheekout', formData)
+        axios.post('https://assignment-11-server-iota-seven.vercel.app/create-payment-cheekout', formData)
         .then(res=> {
             console.log(res.data)
         })

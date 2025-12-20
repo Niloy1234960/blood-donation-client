@@ -56,7 +56,7 @@ const EditRequest = () => {
     };
 
         axios
-    .put(`http://localhost:5000/Dashboard/update-request/${id}`, formData)
+    .put(`https://assignment-11-server-iota-seven.vercel.app/Dashboard/update-request/${id}`, formData)
     .then((res) => {
       console.log(res.data);
       toast.success("your Update successfull");
@@ -70,7 +70,7 @@ const EditRequest = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/Dashboard/view-request/${id}`)
+      .get(`https://assignment-11-server-iota-seven.vercel.app/Dashboard/view-request/${id}`)
       .then((res) => {
         setDetails(res.data);
         setLoading(false);

@@ -39,7 +39,7 @@ const Addproduct = () => {
 
     console.log(data);
 
-    await axios.post("http://localhost:5000/Addproduct",formdata)
+    await axios.post("https://assignment-11-server-iota-seven.vercel.app/Addproduct",formdata)
     .then(result =>{
       console.log(result.data)
       toast.success("Your product add successfull")

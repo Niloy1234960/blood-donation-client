@@ -45,7 +45,7 @@ const Login =(email,password)=>{
         }},[])
 
         useEffect(()=>{
-            axios.get(`http://localhost:5000/users/role/${user?.email}`)
+            axios.get(`https://assignment-11-server-iota-seven.vercel.app/users/role/${user?.email}`)
             .then(res=> {
                 setRole(res.data.role)
                 setUserStatus(res.data.status)

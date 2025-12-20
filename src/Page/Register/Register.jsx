@@ -46,7 +46,7 @@ const Register = () => {
 
     
       const userData = { name, email, imageLink, blood, district, upazila, role: 'donor', status: 'active' };
-      await axios.post("http://localhost:5000/users", userData);
+      await axios.post("https://assignment-11-server-iota-seven.vercel.app/users", userData);
 
       toast.dismiss(loadingToast); 
       toast.success("Registration Successful! Welcome 🩸");

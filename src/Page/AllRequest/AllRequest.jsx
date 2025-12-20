@@ -10,7 +10,7 @@ const AllRequest = () => {
 
   const hendleCencel = (id) => {
     axios
-      .patch(`http://localhost:5000/cancel-request?id=${id}&status=canceled`)
+      .patch(`https://assignment-11-server-iota-seven.vercel.app/cancel-request?id=${id}&status=canceled`)
       .then(() => {
         toast.success("Your request canceled successfully");
         fetchRequest();
@@ -25,7 +25,7 @@ const AllRequest = () => {
   console.log(selectStatus);
   const fetchRequest = () => {
     axios
-      .get(`http://localhost:5000/allRequest?status=${selectStatus}`)
+      .get(`https://assignment-11-server-iota-seven.vercel.app/allRequest?status=${selectStatus}`)
       .then((res) => {
         console.log(res.data);
         setProducts(res.data);
@@ -49,7 +49,7 @@ const AllRequest = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/Delete-request?id=${id}`)
+          .delete(`https://assignment-11-server-iota-seven.vercel.app/Delete-request?id=${id}`)
           .then(() => {
             Swal.fire({
               title: "Deleted!",

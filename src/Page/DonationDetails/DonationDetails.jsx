@@ -21,7 +21,7 @@ const DonationDetails = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .patch(`http://localhost:5000/donate?id=${id}&status=${status}`)
+          .patch(`https://assignment-11-server-iota-seven.vercel.app/donate?id=${id}&status=${status}`)
           .then((res) => {
             Swal.fire("Saved!", "", "success");
             console.log(res.data);
@@ -37,7 +37,7 @@ const DonationDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/donation-details/${id}`)
+      .get(`https://assignment-11-server-iota-seven.vercel.app/donation-details/${id}`)
       .then((res) => {
         setDetails(res.data);
         setLoading(false);

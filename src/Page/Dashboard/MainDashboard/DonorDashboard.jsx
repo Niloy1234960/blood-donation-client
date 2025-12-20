@@ -10,7 +10,7 @@ const DonorDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/myRequests")
+      .get("https://assignment-11-server-iota-seven.vercel.app/myRequests")
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -25,7 +25,7 @@ const DonorDashboard = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/Delete-request?id=${id}`)
+          .delete(`https://assignment-11-server-iota-seven.vercel.app/Delete-request?id=${id}`)
           .then(() => {
             Swal.fire("Deleted!", "Your Request has been deleted.", "success");
             
