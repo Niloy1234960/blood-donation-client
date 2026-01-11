@@ -33,7 +33,7 @@ const Register = () => {
       formData.append("image", file);
 
      
-      const res = await axios.post(`https://api.imgbb.com/1/upload?key=039ed19dd7ea9e86d51e69b5a3528627`, formData);
+      const res = await axios.post(`https://api.imgbb.com/1/upload?key=aeb73cdd2cfeecb85edcd1ea05b4b36d`, formData);
       const imageLink = res.data.data.display_url;
 
      

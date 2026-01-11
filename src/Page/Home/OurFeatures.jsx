@@ -1,60 +1,103 @@
-import React from "react";
+// src/components/OurFeatures.jsx
+import React from 'react';
+import { motion } from 'motion/react'; // অথবা framer-motion
+import { 
+  FaUserPlus, 
+  FaSearch, 
+  FaExclamationTriangle, 
+  FaHistory, 
+  FaCalendarCheck, 
+  FaHeart 
+} from 'react-icons/fa';
 
 const features = [
   {
-    title: "Support Our Campaigns",
-    description:
-      "Highlight any ongoing fundraising campaigns or special initiatives. Provide details on how visitors can contribute, participate, or spread the word. Use engaging visuals and call-to-action buttons to drive participation.",
-    image:
-      "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80",
+    icon: <FaUserPlus className="w-12 h-12 text-red-600" />,
+    title: "Easy Registration",
+    description: "Join as a donor in minutes. Add your blood group, location & contact details securely.",
   },
   {
-    title: "Did You Know?",
-    description:
-      "Share interesting and important facts about blood donation. This could include statistics about blood needs, the impact of donations, and dispelling common myths about donating blood.",
-    image:
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+    icon: <FaSearch className="w-12 h-12 text-red-600" />,
+    title: "Smart Donor Search",
+    description: "Find nearby eligible donors instantly by blood group, location & availability.",
   },
   {
-    title: "Success Stories",
-    description:
-      "Share inspiring stories of people whose lives were saved through blood donations. Include pictures and testimonials from recipients and donors to make the stories more relatable and impactful.",
-    image:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+    icon: <FaExclamationTriangle className="w-12 h-12 text-red-600" />,
+    title: "Emergency Requests",
+    description: "Post urgent blood needs – notify matching donors immediately with push notifications.",
+  },
+  {
+    icon: <FaHistory className="w-12 h-12 text-red-600" />,
+    title: "Donation History & Impact",
+    description: "Track your donations, see how many lives you've helped save, and get certificates.",
+  },
+  {
+    icon: <FaCalendarCheck className="w-12 h-12 text-red-600" />,
+    title: "Appointment Scheduling",
+    description: "Book donation slots at blood banks or camps with automatic reminders.",
+  },
+  {
+    icon: <FaHeart className="w-12 h-12 text-red-600" />,
+    title: "Community & Awareness",
+    description: "Learn about blood donation, eligibility, myths, and join campaigns to spread awareness.",
   },
 ];
 
-export default function OurFeatures() {
+const OurFeatures = () => {
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center text-pink-600 mb-12">
-          Our Features
-        </h2>
+    <section className="py-16 md:py-24 bg-gray-50 ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900  mb-4"
+          >
+            Why Choose Our Platform?
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg md:text-xl text-gray-700  max-w-3xl mx-auto"
+          >
+            Making blood donation simple, fast, and life-saving for everyone
+          </motion.p>
+        </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={index}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-gray-200"
             >
-              <img
-                src={feature.image}
-                alt={feature.title}
-                className="h-48 w-full object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-3 text-gray-900">
+              <div className="p-8 text-center">
+                <div className="mb-6 inline-block p-4 bg-red-50 rounded-full">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-black mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-gray-700">
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default OurFeatures;
