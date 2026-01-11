@@ -18,6 +18,7 @@ import MyRequest from "../Page/Dashboard/MyRequest/MyRequest";
 import ViewDetails from "../Page/ViewDetails/ViewDetails";
 import EditRequest from "../Page/Dashboard/MyRequest/EditRequest";
 import ErrorPage from "../Page/ErrorPage/ErrorPage";
+import AllBlogsSection from "../Page/fetchBlogs/AllBlogsSection";
 
 
 
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
                          <DonationDetails>
                          </DonationDetails>
                      </PrivateRoute>
+        },
+        {
+            path: "/allBlogs",
+            element: <AllBlogsSection></AllBlogsSection>
         }
     ]
   },

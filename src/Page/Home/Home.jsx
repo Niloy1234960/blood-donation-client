@@ -7,6 +7,8 @@ import Categories from '../Categories/Categories';
 import HighlightsSection from '../HighlightsSection/HighlightsSection';
 import StatisticsSection from '../StatisticsSection/StatisticsSection';
 import Testimonials from '../Testimonials/Testimonials';
+import BlogsSection from '../fetchBlogs/BlogsSection';
+import NewsletterSection from '../NewsletterSection/NewsletterSection';
 
 
 const Home = () => {
@@ -22,6 +24,8 @@ const Home = () => {
                 <HighlightsSection></HighlightsSection>
                 <StatisticsSection></StatisticsSection>
                 <Testimonials></Testimonials>
+                <BlogsSection></BlogsSection>
+                <NewsletterSection></NewsletterSection>
             </div>
             <div className='mb-20 mt-20'>
                 <ContactSection></ContactSection>
