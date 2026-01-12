@@ -7,17 +7,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 const slides = [
   {
-    image: "https://i.ibb.co/Q7YVQpg7/8bcab941c5460529caf339ac1681692d.jpg",
+    image:"https://i.ibb.co.com/JWHJB2FW/pexels-lazymonkey-1164531.jpg",
     title: "One Drop Can Save A Life",
     subtitle: "Your generous donation today gives someone a tomorrow",
   },
   {
-    image: "https://i.ibb.co/TDLynXmX/663293dc010ee34e938ac0ec48d2bf74.jpg",
+    image: "https://i.ibb.co.com/s4htbxP/pexels-rsapmech-13009643.jpg",
     title: "Be The Real Hero",
     subtitle: "Donate blood — make miracles possible",
   },
   {
-    image: "https://i.ibb.co/gZfNLmPq/398e4090cd022d8bb53472186a232b4c.jpg",
+    image: "https://i.ibb.co.com/99DTRWYH/pexels-karola-g-6629369.jpg",
     title: "Every Donor Matters",
     subtitle: "Together, we save lives",
   },

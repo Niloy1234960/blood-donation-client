@@ -3,208 +3,218 @@ import { AuthContext } from "../../../Context/AuthContext";
 import axios from "axios";
 import useAxiosSecure from "../../../hook/UseAxiosSecure";
 import toast, { Toaster } from "react-hot-toast";
+import { FaPlusCircle, FaHospital, FaMapMarkerAlt, FaTint, FaUser } from "react-icons/fa";
 
 const AddRequest = () => {
   const { user } = useContext(AuthContext);
-  const AxiosSecure = useAxiosSecure()
+  const AxiosSecure = useAxiosSecure();
 
   const [upazila, setUpazila] = useState("");
   const [district, setDistrict] = useState("");
   const [upazilas, setUpazilas] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get("/upazila.json").then((res) => {
-      setUpazilas(res.data.upazilas);
-    });
+    axios.get("/upazila.json").then((res) => setUpazilas(res.data.upazilas));
+    axios.get("/district.json").then((res) => setDistricts(res.data.districts));
   }, []);
 
-  useEffect(() => {
-    axios.get("/district.json").then((res) => {
-      setDistricts(res.data.districts);
-    });
-  }, []);
-
-  const handleRequest = (e) => {
+  const handleRequest = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const form = e.target;
 
-    const requester_name = form.requester_name.value;
-    const requester_email = form.requester_email.value;
-    const name = form.name.value;
-    const district_name = form.district_name.value;
-    const upazila_name = form.upazila_name.value;
-    const hospital_name = form.hospital_name.value;
-    const address = form.address.value;
-    const blood_group = form.blood_group.value;
-
     const formData = {
-      requester_name,
-      requester_email,
-      name,
-      district_name,
-      upazila_name,
-      hospital_name,
-      address,
-      blood_group,
+      requester_name: user?.displayName,
+      requester_email: user?.email,
+      name: form.name.value,
+      district_name: district,
+      upazila_name: upazila,
+      hospital_name: form.hospital_name.value,
+      address: form.address.value,
+      blood_group: form.blood_group.value,
       donation_status: "pending",
+      createdAt: new Date(),
     };
 
-    AxiosSecure
-      .post("/request", formData)
-      .then((res) => {
-        console.log(res.data);
-        toast.success("add successfull")
-        
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const res = await AxiosSecure.post("/request", formData);
+      if (res.data.insertedId) {
+        toast.success("Blood Donation Request Created Successfully!");
+        form.reset();
+        setDistrict("");
+        setUpazila("");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add request. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div>
-      <Toaster></Toaster>
-      <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md">
-        <h2 className="text-2xl font-semibold mb-6">
-          Blood Donation Request
-        </h2>
-
-        <form onSubmit={handleRequest} className="space-y-4">
-          {/* Requester Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Requester Name
-              </label>
-              <input
-                type="text"
-                readOnly
-                value={user?.displayName}
-                name="requester_name"
-                className="w-full rounded-lg border border-gray-300 bg-gray-100 p-2"
-              />
+    <div className="min-h-screen bg-slate-50/50 py-10 px-4">
+      <Toaster position="top-center" />
+      
+      <div className="max-w-4xl mx-auto">
+        {/* Header Section */}
+        <div className="bg-white rounded-t-[2rem] p-8 border-b border-slate-100 shadow-sm">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="p-3 bg-red-100 text-red-600 rounded-2xl">
+              <FaPlusCircle size={24} />
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Requester Email
-              </label>
-              <input
-                type="email"
-                readOnly
-                value={user?.email}
-                name="requester_email"
-                className="w-full rounded-lg border border-gray-300 bg-gray-100 p-2"
-              />
+              <h2 className="text-2xl font-black text-slate-800">Create Donation Request</h2>
+              <p className="text-slate-500 text-sm font-medium">Please provide accurate details for the patient.</p>
             </div>
           </div>
+        </div>
 
-          {/* Recipient Name */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Recipient Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              className="w-full rounded-lg border border-gray-300 p-2"
-            />
-          </div>
-
-          {/* District & Upazila */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                District
-              </label>
-              <select
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                name="district_name"
-                className="w-full rounded-lg border border-gray-300 p-2"
-              >
-                <option>Select District</option>
-                {districts.map((d) => (
-                  <option value={d?.name} key={d.id}>
-                    {d?.name}
-                  </option>
-                ))}
-              </select>
+        {/* Form Section */}
+        <form onSubmit={handleRequest} className="bg-white rounded-b-[2rem] p-8 shadow-xl shadow-slate-200/50 space-y-8">
+          
+          {/* Section 1: Requester Info (Read Only) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Your Name</label>
+              <div className="relative">
+                <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                <input
+                  type="text"
+                  readOnly
+                  value={user?.displayName}
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-500 text-sm outline-none cursor-not-allowed"
+                />
+              </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Upazila
-              </label>
-              <select
-                value={upazila}
-                onChange={(e) => setUpazila(e.target.value)}
-                name="upazila_name"
-                className="w-full rounded-lg border border-gray-300 p-2"
-              >
-                <option>Select Upazila</option>
-                {upazilas.map((u) => (
-                  <option value={u?.name} key={u.id}>
-                    {u?.name}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Your Email</label>
+              <div className="relative">
+                <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                <input
+                  type="email"
+                  readOnly
+                  value={user?.email}
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-500 text-sm outline-none cursor-not-allowed"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Hospital */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Hospital Name
-            </label>
-            <input
-              type="text"
-              name="hospital_name"
-              className="w-full rounded-lg border border-gray-300 p-2"
-            />
+          {/* Section 2: Recipient Details */}
+          <div className="space-y-6">
+            <h3 className="text-sm font-bold text-slate-800 border-l-4 border-red-500 pl-3">Patient & Location Details</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Recipient Name */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Recipient Name</label>
+                <input
+                  required
+                  type="text"
+                  name="name"
+                  placeholder="Enter patient name"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm"
+                />
+              </div>
+
+              {/* Blood Group */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Blood Group Needed</label>
+                <div className="relative">
+                  <FaTint className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500" />
+                  <select
+                    required
+                    name="blood_group"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm appearance-none"
+                  >
+                    <option value="">Select Group</option>
+                    {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(group => (
+                      <option key={group} value={group}>{group}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* District */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">District</label>
+                <select
+                  required
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm"
+                >
+                  <option value="">Select District</option>
+                  {districts.map((d) => (
+                    <option value={d?.name} key={d.id}>{d?.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Upazila */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Upazila</label>
+                <select
+                  required
+                  value={upazila}
+                  onChange={(e) => setUpazila(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm"
+                >
+                  <option value="">Select Upazila</option>
+                  {upazilas.map((u) => (
+                    <option value={u?.name} key={u.id}>{u?.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Hospital */}
+              <div className="space-y-1 md:col-span-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hospital Name</label>
+                <div className="relative">
+                  <FaHospital className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                  <input
+                    required
+                    type="text"
+                    name="hospital_name"
+                    placeholder="e.g. Dhaka Medical College Hospital"
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="space-y-1 md:col-span-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Address Line</label>
+                <div className="relative">
+                  <FaMapMarkerAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                  <input
+                    required
+                    type="text"
+                    name="address"
+                    placeholder="House no, Road no, Area..."
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Address */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Full Address Line
-            </label>
-            <input
-              type="text"
-              name="address"
-              className="w-full rounded-lg border border-gray-300 p-2"
-            />
-          </div>
-
-          {/* Blood Group */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Blood Group
-            </label>
-            <select
-              name="blood_group"
-              className="w-full rounded-lg border border-gray-300 p-2"
-            >
-              <option value="">Select</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-            </select>
-          </div>
-
-          {/* Button */}
-          <div className="pt-4">
+          {/* Submit Button */}
+          <div className="pt-6">
             <button
+              disabled={loading}
               type="submit"
-              className="px-6 py-2 rounded-xl bg-black text-white font-medium hover:bg-red-700"
+              className={`w-full md:w-auto px-10 py-4 bg-[#0F172A] hover:bg-red-600 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              Request Blood Donation
+              {loading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                <FaPlusCircle />
+              )}
+              {loading ? "Processing..." : "Publish Donation Request"}
             </button>
           </div>
         </form>

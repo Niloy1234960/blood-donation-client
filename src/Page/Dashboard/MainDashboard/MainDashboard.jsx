@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 const MainDashboard = () => {
 
   const {role} = useContext(AuthContext)
+  console.log(role)
  
 
   return (

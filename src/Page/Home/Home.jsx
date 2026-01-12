@@ -9,6 +9,7 @@ import StatisticsSection from '../StatisticsSection/StatisticsSection';
 import Testimonials from '../Testimonials/Testimonials';
 import BlogsSection from '../fetchBlogs/BlogsSection';
 import NewsletterSection from '../NewsletterSection/NewsletterSection';
+import FAQ from '../FAQ/FAQ';
 
 
 const Home = () => {
@@ -26,6 +27,7 @@ const Home = () => {
                 <Testimonials></Testimonials>
                 <BlogsSection></BlogsSection>
                 <NewsletterSection></NewsletterSection>
+                <FAQ></FAQ>
             </div>
             <div className='mb-20 mt-20'>
                 <ContactSection></ContactSection>

@@ -1,8 +1,8 @@
 import React, { use } from "react";
 
-import { AuthContext } from "../../Context/AuthContext"; // assuming এটা ঠিক আছে
+import { AuthContext } from "../../Context/AuthContext"; 
 import { toast } from "react-toastify";
-import { FaTint, FaUserCircle, FaSun, FaMoon } from "react-icons/fa"; // icons যোগ করা হলো
+import { FaTint, FaUserCircle, FaSun, FaMoon } from "react-icons/fa"; 
 import { Link, NavLink } from "react-router";
 
 const Navbar = () => {
@@ -23,6 +23,7 @@ const Navbar = () => {
     { to: "/request", label: "Donation Requests" },
     { to: "/funding", label: "Funding" },
     { to: "/search", label: "Find Donors" },
+    { to: "/allBlogs", label: "All blogs" },
   ];
 
   const activeClass =
